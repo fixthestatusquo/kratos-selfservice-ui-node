@@ -37,25 +37,26 @@ form label input:not(:placeholder-shown) ~ span {
 
 form button {
     border-radius: 0.225em;
-    background-color: var(--primary-main);
+    background-color: var(--ftsq-color-secondary);
     color: var(--base-white);
     border-width: 0;
     padding: 0.875em 0.5em;
     transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
     margin-top: 3rem;
     cursor: pointer;
+
+    font-weight: 600;
 }
 
 form button:hover {
     background-color: var(--primary-half);
-    color: var(--primary-dark);
 }
 
 form label input {
     border-radius: 0.166em;
-    background-color: var(--base-black);
+    background-color: var(--base-light);
     border-width: 0;
-    color: var(--base-white);
+    color: var(--base-text);
     padding: 0.875em 0.666em;
     font-size: inherit;
     line-height: 168%;
@@ -83,7 +84,7 @@ form input::placeholder {
 }
 
 .password-visibility-toggle path {
-    fill: var(--base-white);
+    fill: var(--base-text);
 }
 
 .password-visibility-toggle {
