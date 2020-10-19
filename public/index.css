@@ -25,6 +25,8 @@ body {
     background: var(--base-white);
 }
 
+
+
 .container {
     background-color: var(--base-white);
     display: flex;
@@ -36,9 +38,11 @@ body {
 }
 
 
+
 .auth .container {
     width: 300px;
 }
+
 
 .logo {
     pointer-events: none;
@@ -58,7 +62,7 @@ body {
 }
 
 .content .header {
-    padding: 1.666rem 11.5rem;
+    padding: 1rem 11.5rem;
     display: flex;
     box-sizing: border-box;
     justify-content: space-between;
@@ -101,7 +105,7 @@ body {
 }
 
 .content .header .logo {
-    height: 2rem;
+    height: 3rem;
     margin: 0;
 }
 
@@ -187,3 +191,18 @@ h4 ~ h5 {
 .container a:hover {
     color: var(--base-white);
 }
+
+@media screen and (max-width: 600px) {
+    .container {
+        width: inherit;
+        padding: 10px;
+    }
+    .auth .container {
+        width: inherit; 
+        margin: 0px;
+    }
+    .content .header {
+        padding: 1rem 1rem;
+    }
+}
+

@@ -31,3 +31,17 @@
     display: flex;
     justify-content: space-between;
 }
+
+.auth .logo {
+    width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+    .auth .logo-container {
+        text-align: center;
+    }
+    .auth .logo {
+        width: 80%;
+        padding-top: 5%;
+    }
+}
