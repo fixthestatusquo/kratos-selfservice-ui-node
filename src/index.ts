@@ -1,59 +1,26 @@
 import cookieParser from 'cookie-parser'
 import express, { Request, NextFunction, Response } from 'express'
 import handlebars from 'express-handlebars'
-import request from 'request'
-import { authHandler } from './routes/auth'
+import loginHandler from './routes/login'
+import registrationHandler from './routes/registration'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
-import jwks from 'jwks-rsa'
-import jwt from 'express-jwt'
-import {
-  getTitle,
-  sortFormFields,
-  toFormInputPartialName,
-} from './translations'
+import config, { SECURITY_MODE_JWT } from './config'
+import { getTitle, toFormInputPartialName } from './translations'
 import * as stubs from './stub/payloads'
-import { FormField, PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
 import {discourseRedirect, procaDashRedirect} from './routes/redirect'
 import morgan from 'morgan'
-import urljoin from 'url-join'
 import * as https from 'https'
 import * as fs from 'fs'
+import protectOathkeeper from './middleware/oathkeeper'
+import protectSimple from './middleware/simple'
 
-const protectOathKeeper = jwt({
-  // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
-  secret: jwks.expressJwtSecret({
-    cache: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: config.jwksUrl,
-  }),
-  algorithms: ['RS256'],
-})
-
-const publicEndpoint = new PublicApi(config.kratos.public)
-const protectProxy = (req: Request, res: Response, next: NextFunction) => {
-  // When using ORY Oathkeeper, the redirection is done by ORY Oathkeeper.
-  // Since we're checking for the session ourselves here, we redirect here
-  // if the session is invalid.
-  req.headers['host'] = config.kratos.public.split('/')[2]
-  publicEndpoint
-    .whoami(req as { headers: { [name: string]: string } })
-    .then(({ body, response }) => {
-      ;(req as Request & { user: any }).user = { session: body }
-      next()
-    })
-    .catch(() => {
-      res.redirect(urljoin(config.baseUrl, '/auth/login'))
-    })
-}
-
-const protect =
-  config.securityMode === SECURITY_MODE_JWT ? protectOathKeeper : protectProxy
+export const protect =
+  config.securityMode === SECURITY_MODE_JWT ? protectOathkeeper : protectSimple
 
 const app = express()
 app.use(morgan('tiny'))
@@ -66,6 +33,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })
+
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 
@@ -82,7 +50,7 @@ app.engine(
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       getTitle,
       toFormInputPartialName,
-      logoutUrl: (context: any) =>
+      logoutUrl: () =>
         `${config.kratos.browser}/self-service/browser/flows/logout`,
     },
   })
@@ -93,14 +61,12 @@ if (process.env.NODE_ENV === 'stub') {
   // when working on CSS or HTML things.
   app.get('/', dashboard)
   app.get('/auth/registration', (_: Request, res: Response) => {
-    const config = stubs.registration.methods.password.config
     res.render('registration', {
       password: stubs.registration.methods.password.config,
       oidc: stubs.registration.methods.oidc.config,
     })
   })
   app.get('/auth/login', (_: Request, res: Response) => {
-    const config = stubs.login.methods.password.config
     res.render('login', {
       password: stubs.login.methods.password.config,
       oidc: stubs.login.methods.oidc.config,
@@ -113,8 +79,8 @@ if (process.env.NODE_ENV === 'stub') {
 } else {
   app.get('/', protect, dashboard)
   app.get('/dashboard', protect, dashboard)
-  app.get('/auth/registration', authHandler('registration'))
-  app.get('/auth/login', authHandler('login'))
+  app.get('/auth/registration', registrationHandler)
+  app.get('/auth/login', loginHandler)
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)
@@ -125,22 +91,6 @@ if (process.env.NODE_ENV === 'stub') {
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
-
-if (config.securityMode === SECURITY_MODE_STANDALONE) {
-  // If this security mode is enabled, we redirect all requests matching `/self-service` to ORY Kratos
-  app.use(
-    '/.ory/kratos/public/',
-    (req: Request, res: Response, next: NextFunction) => {
-      const url = urljoin(
-        config.kratos.public,
-        req.url.replace('/.ory/kratos/public', '')
-      )
-      req
-        .pipe(request(url, { followRedirect: false }).on('error', next))
-        .pipe(res)
-    }
-  )
-}
 
 app.get('*', (_: Request, res: Response) => {
   res.redirect(config.baseUrl)

@@ -14,8 +14,20 @@ const translations = {
     position: 1,
   },
   'traits.last_name': {
-     title: 'Last name',
-     position: 2,
+    title: 'Last Name',
+    position: 2,
+  },
+  'traits.name.first': {
+    title: 'First Name',
+    position: 2,
+  },
+  'traits.name.last': {
+    title: 'Last Name',
+    position: 3,
+  },
+  'traits.website': {
+    title: 'Website',
+    position: 4,
   },
   identifier: {
     title: 'E-Mail',
@@ -29,19 +41,16 @@ const translations = {
 
 type Translations = typeof translations
 
-const getTitle = (key: string): string =>
+export const getTitle = (key: string): string =>
   key in translations ? translations[key as keyof Translations].title : key
 
-const getPosition = (field: FormField) =>
+export const getPosition = (field: FormField) =>
   field.name && field.name in translations
     ? translations[field.name as keyof Translations].position
     : Infinity
 
-const sortFormFields = (first: FormField, second: FormField) =>
-  getPosition(first) - getPosition(second)
-
-// this helper function translates the html input type to the corresponding partial name
-const toFormInputPartialName = (type: string) => {
+// This helper function translates the html input type to the corresponding partial name.
+export const toFormInputPartialName = (type: string) => {
   switch (type) {
     case 'hidden':
       return 'form_input_hidden'
@@ -53,5 +62,3 @@ const toFormInputPartialName = (type: string) => {
       return 'form_input_default'
   }
 }
-
-export { getTitle, sortFormFields, toFormInputPartialName }
