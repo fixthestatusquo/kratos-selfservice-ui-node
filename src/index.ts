@@ -19,6 +19,7 @@ import { FormField, PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
+import {discourseRedirect, procaDashRedirect} from './routes/redirect'
 import morgan from 'morgan'
 import urljoin from 'url-join'
 import * as https from 'https'
@@ -118,6 +119,8 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)
   app.get('/recovery', recoveryHandler)
+  app.get('/sso/discourse', discourseRedirect)
+  app.get('/sso/proca', procaDashRedirect)
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))

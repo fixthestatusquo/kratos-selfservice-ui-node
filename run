@@ -1,0 +1,3 @@
+#!/usr/bin/execlineb
+envfile .env
+npm start

@@ -3,11 +3,19 @@ import { FormField } from '@oryd/kratos-client'
 const translations = {
   password: {
     title: 'Password',
-    position: 2,
+    position: 4,
   },
   'traits.email': {
     title: 'E-Mail',
+    position: 3,
+  },
+  'traits.first_name': {
+    title: 'First name',
     position: 1,
+  },
+  'traits.last_name': {
+     title: 'Last name',
+     position: 2,
   },
   identifier: {
     title: 'E-Mail',
