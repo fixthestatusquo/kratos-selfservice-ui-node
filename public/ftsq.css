@@ -2,7 +2,15 @@
 :root {
   --ftsq-color-primary: #ff5c39;
   --ftsq-color-secondary: #485cc7;
-  --ftsq-color-gray: #54585a; }
+  --ftsq-color-secondary-lighter: #5375E6;
+  --ftsq-color-gray: #54585a;
+  --ftsq-color-halfway-10: #e75c4c;
+  --ftsq-color-halfway-20: #d15c5d;
+  --ftsq-color-halfway-30: #b95c6f;
+  --ftsq-color-halfway-40: #a65c7e;
+  --ftsq-color-halfway-50: #8c5c92;
+  --ftsq-color-halfway-60: #7a5ca0;
+  --ftsq-color-halfway-70: #615cb4; }
 
 .ftsq-font, body {
   font-family: 'Titillium Web', sans-serif;
@@ -18,5 +26,35 @@
 .ftsq-font-h-bold {
   font-weight: 900; }
 
+.ftsq-sharp-corners, input, button {
+  border-radius: 0px; }
+
+/* gradient animation */
 .ftsq-bg-gradient {
   background: linear-gradient(45deg, #ff5c39 0%, #485cc7 80%); }
+
+/* this does not work - skips straign to full grafient and stutters when hover-off :( 
+@keyframes bg-to-gradient {
+    0% {background: linear-gradient(45deg, $ftsq-color-halfway-40 0%, $ftsq-color-halfway-40 80%);}
+    25% {background: linear-gradient(45deg, $ftsq-color-halfway-30 0%, $ftsq-color-halfway-50 80%);}
+    50% {background: linear-gradient(45deg, $ftsq-color-halfway-20 0%, $ftsq-color-halfway-60 80%);}
+    75% {background: linear-gradient(45deg, $ftsq-color-halfway-10 0%, $ftsq-color-halfway-70 80%);}
+    100% {background: $ftsq-gradient-45;}
+}
+
+.ftsq-bg-gradient-on-hover {
+    background-color: $ftsq-color-halfway-40;
+    animation: bg-to-gradient 0.1s linear;
+    animation-direction: reverse;
+}
+
+.ftsq-bg-gradient-on-hover:hover {
+    animation: bg-to-gradient 2s linear;
+    background: $ftsq-gradient-45;
+}
+*/
+/*
+ Include this style to overwrite defaults of a theme with ftsq preference.
+ XXX should these styles be !imporant ? will they work otherwise if they won't :w
+
+ */

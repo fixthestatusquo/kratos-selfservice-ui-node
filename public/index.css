@@ -8,7 +8,7 @@
     --base-dark: #19191D;
     --base-black: #000000;
     --primary-light: #ECFDFE;
-    --primary-half: #a15c82;
+    --primary-half: var(--ftsq-color-secondary-lighter);
     --primary-main: var(--ftsq-color-secondary);
     --primary-dark: #2E0473;
     --red-strong: var(--ftsq-color-primary);
@@ -107,6 +107,11 @@ body {
 .content .header .logo {
     height: 3rem;
     margin: 0;
+}
+
+content .header .settings a,
+content .header .discourse a {
+    text-decoration: none;
 }
 
 .content .header .logout a,
